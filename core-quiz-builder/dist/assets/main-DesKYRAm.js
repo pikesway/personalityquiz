@@ -1,0 +1,9 @@
+(function(){"use strict";var l={exports:{}},a={};/**
+ * @license React
+ * react-jsx-runtime.production.js
+ *
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */var x;function m(){if(x)return a;x=1;var n=Symbol.for("react.transitional.element"),o=Symbol.for("react.fragment");function u(s,e,t){var d=null;if(t!==void 0&&(d=""+t),e.key!==void 0&&(d=""+e.key),"key"in e){t={};for(var i in e)i!=="key"&&(t[i]=e[i])}else t=e;return e=t.ref,{$$typeof:n,type:s,key:d,ref:e!==void 0?e:null,props:t}}return a.Fragment=o,a.jsx=u,a.jsxs=u,a}var h;function w(){return h||(h=1,l.exports=m()),l.exports}var r=w();const v=window.wp?.apiFetch;function j(){const[n,o]=c(null),[u,s]=c(!0),[e,t]=c(null);return k(()=>{if(!v){t("WordPress API not available. Please ensure WordPress scripts are loaded."),s(!1);return}const i=new URLSearchParams(window.location.search).get("post");i?v({path:`/core-quiz/v1/quiz/${i}`}).then(f=>{o(f),s(!1)}).catch(f=>{t(f.message||"Failed to load quiz data"),s(!1)}):(s(!1),o({title:"",results:[],questions:[]}))},[]),u?r.jsx("div",{children:"Loading Quiz Data..."}):e?r.jsxs("div",{style:{color:"red"},children:["Error: ",e]}):r.jsxs("div",{children:[r.jsx("h1",{children:"Core Quiz Builder"}),r.jsx("hr",{}),r.jsx("h2",{children:"Raw Quiz Data (for debugging):"}),r.jsx("pre",{style:{background:"#eee",padding:"1rem",whiteSpace:"pre-wrap",wordBreak:"break-all"},children:JSON.stringify(n,null,2)})]})}const{useState:c,useEffect:k}=window.React,p=window.React,R=window.ReactDOM;document.readyState==="loading"?document.addEventListener("DOMContentLoaded",E):E();function E(){const n=document.getElementById("root");n&&R&&R.createRoot&&R.createRoot(n).render(p.createElement(p.StrictMode,null,p.createElement(j,null)))}})();

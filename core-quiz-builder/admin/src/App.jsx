@@ -1,5 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { apiFetch } from '@wordpress/api-fetch';
+// Get React hooks from WordPress global
+const React = window.React;
+const { useState, useEffect } = React;
+
+// Access WordPress API from the global wp object
+const apiFetch = window.wp?.apiFetch;
 
 function App() {
   const [quizData, setQuizData] = useState(null);
@@ -7,6 +11,13 @@ function App() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    // Check if apiFetch is available
+    if (!apiFetch) {
+      setError('WordPress API not available. Please ensure WordPress scripts are loaded.');
+      setIsLoading(false);
+      return;
+    }
+
     // This gets the current post's ID from the URL.
     const params = new URLSearchParams(window.location.search);
     const postId = params.get('post');
@@ -19,40 +30,46 @@ function App() {
           setIsLoading(false);
         })
         .catch((err) => {
-          setError(err.message);
+          setError(err.message || 'Failed to load quiz data');
           setIsLoading(false);
         });
     } else {
-        // This is a new quiz that hasn't been saved yet.
-        setIsLoading(false);
-        setQuizData({
-            title: '',
-            results: [],
-            questions: []
-        });
+      // This is a new quiz that hasn't been saved yet.
+      setIsLoading(false);
+      setQuizData({
+        title: '',
+        results: [],
+        questions: []
+      });
     }
-  }, []); // The empty array ensures this runs only once on component load
+  }, []);
 
   if (isLoading) {
-    return <div>Loading Quiz Data...</div>;
+    return React.createElement('div', null, 'Loading Quiz Data...');
   }
 
   if (error) {
-    return <div style={{ color: 'red' }}>Error: {error}</div>;
+    return React.createElement('div', { style: { color: 'red' } }, 'Error: ', error);
   }
 
-  return (
-    <div>
-      <h1>Core Quiz Builder</h1>
-      
-      {/* We will build the UI components here */}
-      
-      <hr />
-      <h2>Raw Quiz Data (for debugging):</h2>
-      <pre style={{ background: '#eee', padding: '1rem', whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
-        {JSON.stringify(quizData, null, 2)}
-      </pre>
-    </div>
+  return React.createElement(
+    'div',
+    null,
+    React.createElement('h1', null, 'Core Quiz Builder'),
+    React.createElement('hr', null),
+    React.createElement('h2', null, 'Raw Quiz Data (for debugging):'),
+    React.createElement(
+      'pre',
+      {
+        style: {
+          background: '#eee',
+          padding: '1rem',
+          whiteSpace: 'pre-wrap',
+          wordBreak: 'break-all'
+        }
+      },
+      JSON.stringify(quizData, null, 2)
+    )
   );
 }
 

@@ -83,8 +83,7 @@ add_action( 'edit_form_after_title', 'core_quiz_render_quiz_builder_app' );
 
 
 /**
- * Enqueues the compiled React app module and its assets.
- * This uses the modern wp_enqueue_script_module function.
+ * Enqueues the compiled React app and its assets.
  */
 function core_quiz_enqueue_module_assets( $hook ) {
     if ( 'post.php' !== $hook && 'post-new.php' !== $hook ) { return; }
@@ -99,14 +98,22 @@ function core_quiz_enqueue_module_assets( $hook ) {
     $entry_script_key = 'src/main.jsx';
     if ( ! isset( $manifest[ $entry_script_key ] ) ) { return; }
 
-    // Enqueue the main JS module
-    $script_handle = 'core-quiz-builder-module';
-    wp_enqueue_script_module(
+    // Use regular wp_enqueue_script instead of wp_enqueue_script_module
+    $script_handle = 'core-quiz-builder';
+    
+    // Enqueue WordPress dependencies first
+    wp_enqueue_script( 'react' );
+    wp_enqueue_script( 'react-dom' );
+    wp_enqueue_script( 'wp-element' );
+    wp_enqueue_script( 'wp-api-fetch' );
+    
+    // Then enqueue our script
+    wp_enqueue_script(
         $script_handle,
         plugin_dir_url( __FILE__ ) . 'dist/' . $manifest[ $entry_script_key ]['file'],
-        array( 'wp-element', 'wp-api-fetch' ), // Dependencies
+        array( 'react', 'react-dom', 'wp-element', 'wp-api-fetch' ), // Dependencies
         '1.0.0',
-        true
+        true // Load in footer
     );
 
     // Enqueue the corresponding CSS file
